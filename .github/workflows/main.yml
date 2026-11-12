@@ -1,0 +1,29 @@
+name: Desplegar a Surge
+
+# Cuándo se activa el robot: cada push a la rama main
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest   # una computadora Linux prestada por GitHub
+
+    steps:
+      # 1. Descargar tu código en esa computadora
+      - name: Obtener el código
+        uses: actions/checkout@v4
+
+      # 2. Instalar Node.js (Surge lo necesita)
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 3. Instalar Surge
+      - name: Instalar Surge
+        run: npm install --global surge
+
+      # 4. Publicar la carpeta actual en tu dominio usando el secret
+      - name: Desplegar
+        run: surge ./ sabrina-practica-surge.surge.sh --token ${{ secrets.SURGE_TOKEN }}
